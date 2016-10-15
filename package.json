@@ -1,0 +1,31 @@
+{
+  "name": "passportapp",
+  "version": "1.0.0",
+  "description": "this is a simple example for passport js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Surendra Chaluvadi <surendra.chaluvadi@gmail.com>",
+  "license": "MIT",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chaluvadis"
+  },
+  "dependencies": {
+    "bcryptjs": "2.3.0",
+    "body-parser": "1.15.2",
+    "connect-flash": "0.1.1",
+    "cookie-parser": "1.4.3",
+    "express": "4.14.0",
+    "express-messages": "1.0.1",
+    "express-session": "1.14.1",
+    "express-validator": "2.20.10",
+    "mongoose": "4.6.3",
+    "passport": "0.3.2",
+    "passport-facebook": "2.1.1",
+    "passport-local": "1.0.0",
+    "pug": "2.0.0-beta6"
+  }
+}

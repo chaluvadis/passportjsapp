@@ -1,0 +1,22 @@
+extend layout
+block content
+    h2.page-header Register
+    include errors
+    form(method="post" action="/users/register")
+        .form-group
+            label(for="username") Username
+            input(type="text" name="username" class="form-control" placeholder="Username")
+        
+        .form-group
+            label(for="email") Email
+            input(type="email" name="email" class="form-control" placeholder="Email")
+        
+        .form-group
+            label(for="password") Password
+            input(type="password" name="password" class="form-control" placeholder="Password")
+
+        .form-group
+            label(for="confirmpassword") Confirm Password
+            input(type="password" name="confirmpassword" class="form-control" placeholder="Confirm Password")
+        
+        button(type="submit" class="btn btn-primary") Register
