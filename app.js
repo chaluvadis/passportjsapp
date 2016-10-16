@@ -6,6 +6,7 @@ var express = require('express'),
     flash = require('connect-flash'),
     session = require('express-session'),
     passport = require('passport'),
+    helmet = require('helmet'),
     mongoose = require('mongoose');
 
 // mongodb connection    
@@ -59,6 +60,8 @@ app.use(expressValidator({
         };
     }
 }));
+
+app.use(helmet());
 
 // connect flash
 app.use(flash());
