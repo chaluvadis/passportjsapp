@@ -57,6 +57,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
+  console.log('in deserialize user');
   User.getUserById(id, function (err, user) {
     done(err, user);
   });
@@ -85,10 +86,24 @@ passport.use(new LocalStrategy(
   }
 ));
 
+
+router.post('/login',
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/users/login',
+    failureFlash: true
+  }),
+  function (req, res) {
+    res.redirect('/');
+  }
+);
+
+//facebook staratagy
 var fbCallback = (accessToken, refreshToken, profile, done) => {
   console.log('in call back stratagy');
   console.log(accessToken, refreshToken, profile);
   if(profile){
+      User.createUser();
       return done(null, profile);
   } 
   return done(null, false);
@@ -104,16 +119,6 @@ passport.use(new FacebookStrategy({
   fbCallback
 ));
 
-router.post('/login',
-  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/users/login',
-    failureFlash: true
-  }),
-  function (req, res) {
-    res.redirect('/');
-  }
-);
 
 //facebook strategy
 router.get('/auth/facebook', passport.authenticate('facebook', {
