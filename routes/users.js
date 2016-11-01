@@ -18,13 +18,11 @@ router.get('/login', function (req, res) {
 
 //user registration route
 router.post('/register', function (req, res) {
-  var username = req.body.username;
   var email = req.body.email;
   var password = req.body.password;
   var confirmpassword = req.body.confirmpassword;
 
   //validation
-  req.checkBody('username', 'Username is required').notEmpty();
   req.checkBody('email', 'Email is required').notEmpty();
   req.checkBody('email', 'Email is not valid').isEmail();
   req.checkBody('password', 'Password is required').notEmpty();
@@ -39,7 +37,6 @@ router.post('/register', function (req, res) {
     })
   } else {
     var newUser = new User({
-      'username': username,
       'email': email,
       'password': password
     });
@@ -57,15 +54,14 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-  console.log('in deserialize user');
   User.getUserById(id, function (err, user) {
     done(err, user);
   });
 });
 
 passport.use(new LocalStrategy(
-  function (username, password, done) {
-    User.getUserByUsername(username, function (err, user) {
+  function (email, password, done) {
+    User.getUserByEmail(email, function (err, user) {
       if (err) return err;
       if (!user) {
         return done(null, false, {
@@ -100,38 +96,44 @@ router.post('/login',
 
 //facebook staratagy
 var fbCallback = (accessToken, refreshToken, profile, done) => {
+  process.nextTick(() => {
+
+  });
   console.log('in call back stratagy');
   console.log(accessToken, refreshToken, profile);
-  if(profile){
-      User.createUser();
-      return done(null, profile);
-  } 
+  if (profile) {
+    var newUser = new User({
+      'email': profile.emails[0].value,
+      'password': '',
+      'isDirectUser': false
+    });
+    User.createUser(newUser, function (err, user) {
+      if (err) return done(null, false);
+      return done(null, user);
+    });
+  }
   return done(null, false);
 }
 
-//facebook strategy
 passport.use(new FacebookStrategy({
     clientID: config.facebook.clientID,
     clientSecret: config.facebook.clientSecret,
     callbackURL: config.facebook.callbackURL,
-    profileFields: ['id', 'email', 'first_name', 'last_name']
+    profileFields: ['email', 'first_name', 'last_name']
   },
   fbCallback
 ));
 
-
-//facebook strategy
 router.get('/auth/facebook', passport.authenticate('facebook', {
   scope: 'public_profile'
 }));
 
-
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook', {
-      successRedirect: '/',
-      failureRedirect: '/users/login',
-      failureFlash: true
-    }),
+    successRedirect: '/',
+    failureRedirect: '/users/login',
+    failureFlash: true
+  }),
   function (req, res) {
     res.redirect('/');
   }
@@ -144,3 +146,9 @@ router.get('/logout', function (req, res) {
 });
 
 module.exports = router;
+
+
+//  { id: '341187109568720',
+//    email: 'surendra.chaluvadi@gmail.com',
+//    first_name: 'Surendra',
+//    last_name: 'Chaluvadi' } }

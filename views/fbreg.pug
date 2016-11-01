@@ -1,6 +1,7 @@
-extend layout
+extends layout
 block content
-    h2.page-header Register
+    span Successfully authenticated with facebook. Please choose your password to access the application next time directly
+    h2.page-header Register 
     include errors
     form(method="post" action="/users/register")
         .form-group
